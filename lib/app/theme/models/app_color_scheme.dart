@@ -10,17 +10,18 @@ abstract class AppColorScheme {
 @Injectable(as: AppColorScheme)
 class BaseAppColorScheme implements AppColorScheme {
   BaseAppColorScheme({required ColorPallet colorPallet});
+
   @override
   ColorScheme get lightScheme => const ColorScheme(
         brightness: Brightness.light,
-        primary: ColorPallet.red,
+        primary: Color.fromARGB(255, 156, 89, 255),
         onPrimary: ColorPallet.white,
-        primaryContainer: ColorPallet.lightCoral,
-        onPrimaryContainer: ColorPallet.darkRed,
-        secondary: ColorPallet.teal,
+        primaryContainer: ColorPallet.purpleLight,
+        onPrimaryContainer: ColorPallet.purpleDark,
+        secondary: Color.fromARGB(255, 255, 144, 70),
         onSecondary: ColorPallet.white,
-        secondaryContainer: ColorPallet.paleTurquoise,
-        onSecondaryContainer: ColorPallet.darkTeal,
+        secondaryContainer: Color.fromARGB(255, 236, 223, 255),
+        onSecondaryContainer: Color.fromARGB(255, 148, 77, 255),
         tertiary: ColorPallet.limeGreen,
         onTertiary: ColorPallet.white,
         tertiaryContainer: ColorPallet.paleGreen,
@@ -30,7 +31,7 @@ class BaseAppColorScheme implements AppColorScheme {
         errorContainer: ColorPallet.mistyRose,
         onErrorContainer: ColorPallet.fireBrick,
         onBackground: ColorPallet.black,
-        background: Color(0xFFF9F9F9),
+        background: Color.fromARGB(255, 245, 245, 245),
         surface: ColorPallet.white,
         onSurface: ColorPallet.black,
       );

@@ -1,5 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
+import 'package:workouts/app/database/models/exercise_type.dart';
 import 'package:workouts/app/router/blank_page.dart';
+import 'package:workouts/features/auth/screen/auth_screen.dart';
+import 'package:workouts/features/workouts/screens/exercise_types_screen.dart';
+import 'package:workouts/features/workouts/screens/workout_screen.dart';
+import 'package:workouts/features/workouts/screens/workouts_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -11,7 +17,17 @@ class AppRouter extends _$AppRouter {
   final List<AutoRoute> routes = [
     AutoRoute(
       initial: true,
-      page: BlankRoute.page,
+      path: '/',
+      page: WorkoutsRoute.page,
+    ),
+    AutoRoute(
+      keepHistory: false,
+      page: ExercisesRoute.page,
+    ),
+    AutoRoute(
+      keepHistory: true,
+      path: '/workout',
+      page: WorkoutRoute.page,
     ),
   ];
 }

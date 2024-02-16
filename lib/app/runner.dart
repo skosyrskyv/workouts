@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:workouts/app/app.dart';
 import 'package:workouts/app/app_loading.dart';
+import 'package:workouts/app/database/database.dart';
 import 'package:workouts/app/localization.dart';
 import 'package:workouts/app/runner.config.dart';
 import 'package:workouts/core/network/client/dio_client.dart';
@@ -11,6 +13,7 @@ import 'package:workouts/core/network/client/http_client.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workouts/firebase_options.dart';
 
 final getIt = GetIt.instance;
 
@@ -22,6 +25,9 @@ class Runner {
   static Future<void> _initializeFlutterPluginsAndDependencies() async {
     WidgetsFlutterBinding.ensureInitialized();
     await EasyLocalization.ensureInitialized();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     await configureDependencies();
   }
 
@@ -66,4 +72,8 @@ abstract class InjectableModule {
   Future<IHttpClient> get client async => const DioClient();
 }
 
-Future<void> configureDependencies() async => await $initGetIt(getIt);
+Future<void> configureDependencies() async {
+  await $initGetIt(getIt);
+
+  getIt.registerSingleton(AppDatabase());
+}

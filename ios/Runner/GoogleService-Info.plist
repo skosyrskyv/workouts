@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyD7AOHn7j_5uF9c75UkUjwYJt7bghuntOY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1021927214359</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.skosyrskyv.workouts</string>
+	<key>PROJECT_ID</key>
+	<string>workouts-62a4f</string>
+	<key>STORAGE_BUCKET</key>
+	<string>workouts-62a4f.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1021927214359:ios:773dc31cdb503d709ffb52</string>
+</dict>
+</plist>
