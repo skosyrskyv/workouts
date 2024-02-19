@@ -28,13 +28,13 @@ class ExercisesController extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    if (pattern.isEmpty) {
+    if (pattern.trim().isEmpty) {
       exercises = selected.toList();
       notifyListeners();
       return;
     }
     try {
-      exercises = await db.searchExerciseTypes(pattern: pattern);
+      exercises = await db.searchExerciseTypes(pattern: pattern.trim());
     } catch (e) {
       error = e.toString();
     } finally {

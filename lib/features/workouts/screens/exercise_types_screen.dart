@@ -108,9 +108,12 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
           ],
         ),
         bottomNavigationBar: _state.selected.isNotEmpty
-            ? _DoneButton(
-                active: _state.selected.isNotEmpty,
-                onPressed: () => _state.popScreen(context),
+            ? SafeArea(
+                top: false,
+                child: _DoneButton(
+                  active: _state.selected.isNotEmpty,
+                  onPressed: () => _state.popScreen(context),
+                ),
               )
             : null,
       ),

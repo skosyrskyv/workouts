@@ -56,12 +56,16 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
           MenuDialogItem(label: 'Edit name', notAvailable: true, onTap: () {}),
           MenuDialogItem(label: 'Edit exercises', notAvailable: true, onTap: () {}),
           MenuDialogItem(label: 'Edit workout', notAvailable: true, onTap: () {}),
-          MenuDialogItem(label: 'Add exercises', icon: Icons.add, onTap: () {}),
+          MenuDialogItem(
+            label: 'Add exercises',
+            icon: Icons.add,
+            onTap: () => appRouter.popAndPush(ExercisesRoute(onDone: _state.addExercise)),
+          ),
           MenuDialogItem(label: 'Save as template', notAvailable: true, icon: Icons.save_outlined, onTap: () {}),
           MenuDialogItem(
             label: 'Delete',
             icon: Icons.delete,
-            onTap: () {},
+            onTap: _state.deleteWorkout,
             color: Colors.red,
           ),
         ],
@@ -87,30 +91,31 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
           ),
           centerTitle: true,
         ),
-        body: ReorderableListView(
-          padding: EdgeInsets.only(top: 30, bottom: 50),
-          onReorder: _state.updateExerciseNumber,
-          proxyDecorator: (child, _, __) {
-            return Material(
-              type: MaterialType.canvas,
-              color: Theme.of(context).colorScheme.surface,
-              child: child,
-            );
-          },
-          children: [
-            ..._state.exercises.mapWithIndex(
-              (exercise, index) => _ExerciseItem(
-                key: ValueKey(exercise.uuid),
-                index: index,
-                exercise: exercise,
-                onDelete: () => _state.deleteExercise(exercise.uuid),
+        body: _state.exercises.isEmpty
+            ? _Empty()
+            : ReorderableListView(
+                padding: const EdgeInsets.only(top: 30, bottom: 50),
+                onReorder: _state.updateExerciseNumber,
+                proxyDecorator: (child, _, __) {
+                  return Material(
+                    type: MaterialType.canvas,
+                    color: Theme.of(context).colorScheme.surface,
+                    child: child,
+                  );
+                },
+                children: [
+                  ..._state.exercises.mapWithIndex(
+                    (exercise, index) => _ExerciseItem(
+                      key: ValueKey(exercise.uuid),
+                      index: index,
+                      exercise: exercise,
+                      onDelete: () => _state.deleteExercise(exercise.uuid),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
         bottomNavigationBar: _BottomBar(
-          onDelete: _state.deleteWorkout,
-          onAdd: () => appRouter.push(
+          onAddTap: () => appRouter.push(
             ExercisesRoute(onDone: _state.addExercise),
           ),
         ),
@@ -343,26 +348,96 @@ class _SetsState extends State<_Sets> {
 }
 
 //
+// EXERCISES LIST EMPTY
+//
+class _Empty extends StatelessWidget {
+  const _Empty();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            alignment: Alignment.center,
+            child: const StyledText(
+              'Tap ( + ) button to add exercises to the Workout',
+              align: TextAlign.center,
+              highlighted: true,
+            ),
+          ),
+        ),
+        const Spacer(),
+      ],
+    );
+  }
+}
+
+//
 // BOTTOM BAR
 //
 class _BottomBar extends StatelessWidget {
-  final AsyncCallback onAdd;
-  final VoidCallback onDelete;
+  final AsyncCallback onAddTap;
   const _BottomBar({
-    required this.onAdd,
-    required this.onDelete,
+    required this.onAddTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60,
-      child: Row(
-        children: [
-          const Spacer(),
-          IconButton.filledTonal(onPressed: onAdd, icon: const Icon(Icons.add)),
-          HorizontalSpacer.w10(),
-        ],
+    return SafeArea(
+      top: false,
+      child: SizedBox(
+        height: 70,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _AddExercisesButton(
+              onTap: onAddTap,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AddExercisesButton extends StatelessWidget {
+  final VoidCallback onTap;
+  const _AddExercisesButton({
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.circle,
+      color: Colors.transparent,
+      clipBehavior: Clip.hardEdge,
+      child: InkWell(
+        onTap: onTap,
+        highlightColor: Theme.of(context).colorScheme.secondary,
+        borderRadius: BorderRadius.circular(30),
+        child: Ink(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.secondary,
+              ],
+            ),
+          ),
+          child: Center(
+            child: Icon(
+              Icons.add,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
+        ),
       ),
     );
   }

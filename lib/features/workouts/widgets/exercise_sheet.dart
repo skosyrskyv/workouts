@@ -178,7 +178,7 @@ class _SetItemState extends State<_SetItem> {
       ..addListener(() {
         widget.onChangeReps(repeatsController.text);
       });
-    durationMinutesController = TextEditingController(text: widget.set.duration == null ? '0' : (widget.set.duration! % 60).toStringAsFixed(0))
+    durationMinutesController = TextEditingController(text: widget.set.duration == null ? '0' : (widget.set.duration! / 60).truncate().toStringAsFixed(0))
       ..addListener(() {
         widget.onChangeDuration('${durationMinutesController.text}:${durationSecondsController.text}');
       });
@@ -358,6 +358,7 @@ class _WeightField extends StatelessWidget {
       controller: controller,
       textAlign: TextAlign.center,
       enableInteractiveSelection: false,
+      showCursor: false,
       inputFormatters: [
         _WeightFormatter(),
       ],
@@ -399,6 +400,7 @@ class _RepeatsField extends StatelessWidget {
       controller: controller,
       maxLines: 1,
       keyboardType: TextInputType.none,
+      showCursor: false,
       inputFormatters: [
         _RepeatsFormatter(),
       ],
@@ -439,6 +441,7 @@ class _DurationMinutesField extends StatelessWidget {
         enableInteractiveSelection: false,
         controller: controller,
         maxLines: 1,
+        showCursor: false,
         keyboardType: TextInputType.none,
         inputFormatters: [_MinutesFormatter()],
         minLines: 1,
@@ -479,6 +482,7 @@ class _DurationSecondsField extends StatelessWidget {
         enableInteractiveSelection: false,
         controller: controller,
         maxLines: 1,
+        showCursor: false,
         keyboardType: TextInputType.none,
         inputFormatters: [_SecondsFormatter()],
         minLines: 1,
@@ -517,30 +521,33 @@ class _ControlsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 70,
-      child: ClipRect(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              onPressed: onPrevTap,
-              icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            ),
-            const IconButton(onPressed: null, iconSize: 30, icon: Icon(Icons.history)),
-            IconButton.filled(
-              onPressed: () {
-                appRouter.pop();
-              },
-              iconSize: 40,
-              icon: const Icon(Icons.keyboard_double_arrow_down_rounded),
-            ),
-            IconButton(onPressed: onAddTap, iconSize: 30, icon: const Icon(Icons.add)),
-            IconButton(
-              onPressed: onNextTap,
-              icon: const Icon(Icons.arrow_forward_ios_rounded),
-            ),
-          ],
+    return SafeArea(
+      top: false,
+      child: SizedBox(
+        height: 70,
+        child: ClipRect(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: onPrevTap,
+                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              ),
+              const IconButton(onPressed: null, iconSize: 30, icon: Icon(Icons.history)),
+              IconButton.filled(
+                onPressed: () {
+                  appRouter.pop();
+                },
+                iconSize: 40,
+                icon: const Icon(Icons.keyboard_double_arrow_down_rounded),
+              ),
+              IconButton(onPressed: onAddTap, iconSize: 30, icon: const Icon(Icons.add)),
+              IconButton(
+                onPressed: onNextTap,
+                icon: const Icon(Icons.arrow_forward_ios_rounded),
+              ),
+            ],
+          ),
         ),
       ),
     );

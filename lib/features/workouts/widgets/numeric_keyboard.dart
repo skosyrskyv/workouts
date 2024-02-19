@@ -71,7 +71,7 @@ class NumericKeyboardState extends State<NumericKeyboard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height: 200 + MediaQuery.of(context).padding.bottom,
       color: Theme.of(context).colorScheme.background,
       child: Row(
         children: [
@@ -85,8 +85,12 @@ class NumericKeyboardState extends State<NumericKeyboard> {
                 _KeyboardKey(value: '7', onTap: (value) => _addValue(context, value)),
                 const _HorizontalDivider(),
                 _KeyboardKey(
+                  key: UniqueKey(),
                   value: '.',
-                  onTap: (value) => _addValue(context, value),
+                  onTap: (value) {
+                    print('taped');
+                    _addValue(context, value);
+                  },
                   flex: 3,
                 ),
               ],
@@ -236,9 +240,10 @@ class _NextFocusButton extends StatelessWidget {
 //
 class _KeyboardKey extends StatelessWidget {
   final String value;
-  final Function(String value)? onTap;
+  final Function(String value) onTap;
   final int flex;
   const _KeyboardKey({
+    super.key,
     required this.value,
     required this.onTap,
     this.flex = 2,
@@ -250,13 +255,12 @@ class _KeyboardKey extends StatelessWidget {
       child: Material(
         color: Theme.of(context).colorScheme.background,
         child: InkWell(
-          onTap: onTap != null ? () => onTap!(value) : null,
+          onTap: () => onTap(value),
           child: Center(
             child: StyledText(
               value,
               style: TypographyStyle.labelMedium,
               fontWeight: FontWeight.w500,
-              highlighted: onTap == null,
             ),
           ),
         ),
