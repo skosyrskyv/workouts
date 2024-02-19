@@ -1,16 +1,14 @@
-import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:workouts/core/widgets/styled_text.dart';
 
 class NumericKeyboard extends StatefulWidget {
   final FocusScopeNode focusScopeNode;
-  final VoidCallback onAdd;
+  final VoidCallback onAddSet;
   final VoidCallback onCloseKeyboard;
   const NumericKeyboard({
     super.key,
     required this.focusScopeNode,
-    required this.onAdd,
+    required this.onAddSet,
     required this.onCloseKeyboard,
   });
 
@@ -20,18 +18,11 @@ class NumericKeyboard extends StatefulWidget {
 
 class NumericKeyboardState extends State<NumericKeyboard> {
   // Find text field widget
-  AutoSizeTextField? _findFocusedTextField(BuildContext context) {
-    return widget.focusScopeNode.focusedChild?.context?.findAncestorWidgetOfExactType<AutoSizeTextField>();
+  TextField? _findFocusedTextField(BuildContext context) {
+    return widget.focusScopeNode.focusedChild?.context?.findAncestorWidgetOfExactType<TextField>();
   }
 
   void _nextFocus() {
-    final currentFieldController = _findFocusedTextField(context)?.controller;
-    // Check if the last symbol is comma "," and remove it;
-    if (currentFieldController != null) {
-      if (currentFieldController.text.indexOf(',') == currentFieldController.text.length - 1) {
-        currentFieldController.text = currentFieldController.text.replaceAll(',', '');
-      }
-    }
     // Change focus
     widget.focusScopeNode.nextFocus();
     final textFieldController = _findFocusedTextField(context)?.controller;
@@ -45,35 +36,12 @@ class NumericKeyboardState extends State<NumericKeyboard> {
     final textField = _findFocusedTextField(context);
     final controller = textField?.controller;
     if (controller != null) {
+      TextEditingValue formattedValue = controller.value.copyWith(text: controller.text + value);
       try {
-        // Drop updating if value is comma and text must contain only digits
         if (textField!.inputFormatters != null) {
-          if (textField.inputFormatters!.contains(FilteringTextInputFormatter.digitsOnly) && value == ',') return;
+          formattedValue = textField.inputFormatters!.map((e) => e.formatEditUpdate(controller.value, formattedValue)).last;
         }
-        // Check if text not selected
-        if (!controller.selection.isCollapsed) {
-          controller.text = '';
-        }
-
-        // Check if 0 is single digit in the text and was typed comma
-        if (controller.text == '0' && value != ',') {
-          controller.text = value;
-          return;
-        }
-
-        // Check if comma is first typed symbol
-        if (value == ',' && controller.text.isEmpty) {
-          controller.text = '0$value';
-          return;
-        }
-
-        // Check if comma already exist in the text
-        if (value == ',' && controller.text.contains(',')) return;
-
-        // Check the max text length, except for the comma
-        if (controller.text.replaceAll(',', '').length >= 4) return;
-
-        controller.text = '${controller.text}$value';
+        controller.text = formattedValue.text;
       } catch (e) {
         print(e);
       }
@@ -81,17 +49,21 @@ class NumericKeyboardState extends State<NumericKeyboard> {
   }
 
   void _delete(BuildContext context) {
-    final controller = _findFocusedTextField(context)?.controller;
+    final field = _findFocusedTextField(context);
+    final controller = field?.controller;
     if (controller != null) {
+      final length = controller.text.length;
       try {
-        final length = controller.text.length;
-        if (length > 1) {
-          controller.text = controller.text.substring(0, length - 1);
-        } else {
-          controller.text = '0';
+        var result = const TextEditingValue();
+        final newValue = controller.value.copyWith(
+          text: length > 1 ? controller.text.substring(0, length - 1) : '',
+        );
+        if (field!.inputFormatters != null) {
+          result = field.inputFormatters!.first.formatEditUpdate(controller.value, newValue);
         }
+        controller.text = result.text;
       } catch (e) {
-        print(e);
+        print('DELETE ERROR: $e');
       }
     }
   }
@@ -113,7 +85,7 @@ class NumericKeyboardState extends State<NumericKeyboard> {
                 _KeyboardKey(value: '7', onTap: (value) => _addValue(context, value)),
                 const _HorizontalDivider(),
                 _KeyboardKey(
-                  value: ',',
+                  value: '.',
                   onTap: (value) => _addValue(context, value),
                   flex: 3,
                 ),
@@ -164,7 +136,7 @@ class NumericKeyboardState extends State<NumericKeyboard> {
                   onTap: _nextFocus,
                 ),
                 _AddKeyboardButton(
-                  onTap: widget.onAdd,
+                  onTap: widget.onAddSet,
                 ),
                 _CloseKeyboardButton(
                   onTap: widget.onCloseKeyboard,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:workouts/app/app.dart';
 import 'package:workouts/app/database/database.dart';
 import 'package:workouts/app/database/models/exercise.dart';
-import 'package:workouts/app/database/models/exercise_set.dart';
 import 'package:workouts/app/database/models/exercise_type.dart';
 import 'package:workouts/app/database/models/workout.dart';
 import 'package:workouts/extensions/iterable_extension.dart';
@@ -23,7 +22,6 @@ class WorkoutController extends ChangeNotifier {
   String? error;
   late Workout workout;
   List<Exercise> exercises = [];
-  List<ExerciseSet> sets = [];
 
   Future<void> _init() async {
     workout = Workout.create(date: date);
@@ -32,7 +30,6 @@ class WorkoutController extends ChangeNotifier {
     }
     database.watchWorkout(uuid: workoutUuid ?? workout.uuid).listen(_workoutUpdatesListener);
     database.watchExercisesWithType(uuid: workoutUuid ?? workout.uuid).listen(_exercisesUpdatesListener);
-    database.watchSets(uuid: workoutUuid ?? workout.uuid).listen(_setsUpdatesListener);
   }
 
   void _workoutUpdatesListener(Workout? data) {
@@ -45,13 +42,6 @@ class WorkoutController extends ChangeNotifier {
   void _exercisesUpdatesListener(List<Exercise>? data) {
     if (data != exercises && data != null) {
       exercises = data;
-      notifyListeners();
-    }
-  }
-
-  void _setsUpdatesListener(List<ExerciseSet>? data) {
-    if (data != sets && data != null) {
-      sets = data;
       notifyListeners();
     }
   }
@@ -93,7 +83,8 @@ class WorkoutController extends ChangeNotifier {
   Future<void> addExercise(Set<ExerciseType>? exercisesTypes) async {
     try {
       if (exercisesTypes != null) {
-        final exercises = exercisesTypes.mapWithIndex((type, index) => Exercise.create(workout: workout.uuid, type: type.key, number: index + 1)).toList();
+        final exercises =
+            exercisesTypes.mapWithIndex((type, index) => Exercise.create(workout: workout.uuid, type: type.key, number: index + 1, typeModel: type)).toList();
         await database.createExercises(newExercises: exercises);
       }
     } catch (e) {

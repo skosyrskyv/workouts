@@ -20,6 +20,9 @@ class ExerciseTypes extends Table {
   TextColumn get muscle => textEnum<MuscleGroup>()();
   TextColumn get name => text()();
   TextColumn get name_ru => text().nullable()();
+  BoolColumn get repeats_prop => boolean()();
+  BoolColumn get weight_prop => boolean()();
+  BoolColumn get duration_prop => boolean()();
 
   @override
   Set<Column> get primaryKey => {key};
@@ -37,7 +40,7 @@ class Exercises extends Table {
   DateTimeColumn get created => dateTime().clientDefault(() => DateTime.now())();
   DateTimeColumn get start => dateTime().nullable()();
   DateTimeColumn get finish => dateTime().nullable()();
-  DateTimeColumn get duration => dateTime().nullable()();
+  RealColumn get duration => real().nullable()();
   @override
   Set<Column> get primaryKey => {uuid};
 }
@@ -54,7 +57,7 @@ class ExerciseSets extends Table {
   DateTimeColumn get created => dateTime().clientDefault(() => DateTime.now())();
   DateTimeColumn get start => dateTime().nullable()();
   DateTimeColumn get finish => dateTime().nullable()();
-  DateTimeColumn get duration => dateTime().nullable()();
+  RealColumn get duration => real().nullable()();
   IntColumn get repeats => integer().nullable()();
   RealColumn get weight => real().nullable()();
 
@@ -72,7 +75,7 @@ class Workouts extends Table {
   DateTimeColumn get created => dateTime()();
   DateTimeColumn get start => dateTime().nullable()();
   DateTimeColumn get finish => dateTime().nullable()();
-  DateTimeColumn get duration => dateTime().nullable()();
+  RealColumn get duration => real().nullable()();
 
   @override
   Set<Column> get primaryKey => {uuid};

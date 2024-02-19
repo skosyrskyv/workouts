@@ -85,9 +85,29 @@ class ExerciseSheetController extends ChangeNotifier {
     }
   }
 
+  void updateDuration(String uuid, String value) {
+    try {
+      final minutes = int.parse(value.split(':').first);
+      final seconds = int.parse(value.split(':').last);
+      final duration = minutes * 60 + seconds;
+      database.updateSetDuration(uuid: uuid, duration: duration);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void addSet() {
     try {
-      database.addExerciseSet(newSet: ExerciseSet.create(number: sets.last.number + 1, exercise: current.uuid, workout: current.workout));
+      database.addExerciseSet(
+        newSet: ExerciseSet.create(
+          number: sets.last.number + 1,
+          exercise: current.uuid,
+          workout: current.workout,
+          weight: current.typeModel?.weight_prop == true ? 0 : null,
+          duration: current.typeModel?.duration_prop == true ? 0 : null,
+          repeats: current.typeModel?.repeats_prop == true ? 0 : null,
+        ),
+      );
     } catch (e) {
       print(e);
     }

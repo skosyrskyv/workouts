@@ -11,7 +11,7 @@ class Exercise implements Insertable<Exercise> {
   final DateTime created;
   final DateTime? start;
   final DateTime? finish;
-  final DateTime? duration;
+  final double? duration;
   final ExerciseType? typeModel;
 
   Exercise({
@@ -26,12 +26,18 @@ class Exercise implements Insertable<Exercise> {
     this.typeModel,
   });
 
-  static Exercise create({required String workout, required String type, required int number}) {
+  static Exercise create({
+    required String workout,
+    required String type,
+    required int number,
+    required ExerciseType typeModel,
+  }) {
     return Exercise(
       uuid: const Uuid().v1(),
       type: type,
       number: number,
       workout: workout,
+      typeModel: typeModel,
       created: DateTime.now(),
     );
   }
@@ -44,7 +50,7 @@ class Exercise implements Insertable<Exercise> {
     DateTime? created,
     DateTime? start,
     DateTime? finish,
-    DateTime? duration,
+    double? duration,
     ExerciseType? typeModel,
   }) {
     return Exercise(

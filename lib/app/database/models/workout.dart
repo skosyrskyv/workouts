@@ -8,7 +8,7 @@ class Workout implements Insertable<Workout> {
   final DateTime created;
   final DateTime? start;
   final DateTime? finish;
-  final DateTime? duration;
+  final double? duration;
 
   const Workout({
     required this.uuid,

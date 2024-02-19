@@ -10,6 +10,9 @@ class ExerciseType implements Insertable<ExerciseType> {
   final MuscleGroup muscle;
   final String name;
   final String? name_ru;
+  final bool repeats_prop;
+  final bool weight_prop;
+  final bool duration_prop;
 
   ExerciseType({
     required this.key,
@@ -17,6 +20,9 @@ class ExerciseType implements Insertable<ExerciseType> {
     required this.muscle,
     required this.name,
     required this.name_ru,
+    required this.repeats_prop,
+    required this.weight_prop,
+    required this.duration_prop,
   });
 
   @override
@@ -27,6 +33,9 @@ class ExerciseType implements Insertable<ExerciseType> {
       muscle: Value(muscle),
       name: Value(name),
       name_ru: Value(name_ru),
+      repeats_prop: Value(repeats_prop),
+      weight_prop: Value(weight_prop),
+      duration_prop: Value(duration_prop),
     ).toColumns(nullToAbsent);
   }
 

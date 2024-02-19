@@ -37,8 +37,44 @@ class $ExerciseTypesTable extends ExerciseTypes
   late final GeneratedColumn<String> name_ru = GeneratedColumn<String>(
       'name_ru', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _repeats_propMeta =
+      const VerificationMeta('repeats_prop');
   @override
-  List<GeneratedColumn> get $columns => [key, type, muscle, name, name_ru];
+  late final GeneratedColumn<bool> repeats_prop = GeneratedColumn<bool>(
+      'repeats_prop', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("repeats_prop" IN (0, 1))'));
+  static const VerificationMeta _weight_propMeta =
+      const VerificationMeta('weight_prop');
+  @override
+  late final GeneratedColumn<bool> weight_prop = GeneratedColumn<bool>(
+      'weight_prop', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("weight_prop" IN (0, 1))'));
+  static const VerificationMeta _duration_propMeta =
+      const VerificationMeta('duration_prop');
+  @override
+  late final GeneratedColumn<bool> duration_prop = GeneratedColumn<bool>(
+      'duration_prop', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("duration_prop" IN (0, 1))'));
+  @override
+  List<GeneratedColumn> get $columns => [
+        key,
+        type,
+        muscle,
+        name,
+        name_ru,
+        repeats_prop,
+        weight_prop,
+        duration_prop
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -67,6 +103,30 @@ class $ExerciseTypesTable extends ExerciseTypes
       context.handle(_name_ruMeta,
           name_ru.isAcceptableOrUnknown(data['name_ru']!, _name_ruMeta));
     }
+    if (data.containsKey('repeats_prop')) {
+      context.handle(
+          _repeats_propMeta,
+          repeats_prop.isAcceptableOrUnknown(
+              data['repeats_prop']!, _repeats_propMeta));
+    } else if (isInserting) {
+      context.missing(_repeats_propMeta);
+    }
+    if (data.containsKey('weight_prop')) {
+      context.handle(
+          _weight_propMeta,
+          weight_prop.isAcceptableOrUnknown(
+              data['weight_prop']!, _weight_propMeta));
+    } else if (isInserting) {
+      context.missing(_weight_propMeta);
+    }
+    if (data.containsKey('duration_prop')) {
+      context.handle(
+          _duration_propMeta,
+          duration_prop.isAcceptableOrUnknown(
+              data['duration_prop']!, _duration_propMeta));
+    } else if (isInserting) {
+      context.missing(_duration_propMeta);
+    }
     return context;
   }
 
@@ -88,6 +148,12 @@ class $ExerciseTypesTable extends ExerciseTypes
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       name_ru: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name_ru']),
+      repeats_prop: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}repeats_prop'])!,
+      weight_prop: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}weight_prop'])!,
+      duration_prop: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}duration_prop'])!,
     );
   }
 
@@ -108,6 +174,9 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
   final Value<MuscleGroup> muscle;
   final Value<String> name;
   final Value<String?> name_ru;
+  final Value<bool> repeats_prop;
+  final Value<bool> weight_prop;
+  final Value<bool> duration_prop;
   final Value<int> rowid;
   const ExerciseTypesCompanion({
     this.key = const Value.absent(),
@@ -115,6 +184,9 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
     this.muscle = const Value.absent(),
     this.name = const Value.absent(),
     this.name_ru = const Value.absent(),
+    this.repeats_prop = const Value.absent(),
+    this.weight_prop = const Value.absent(),
+    this.duration_prop = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ExerciseTypesCompanion.insert({
@@ -123,17 +195,26 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
     required MuscleGroup muscle,
     required String name,
     this.name_ru = const Value.absent(),
+    required bool repeats_prop,
+    required bool weight_prop,
+    required bool duration_prop,
     this.rowid = const Value.absent(),
   })  : key = Value(key),
         type = Value(type),
         muscle = Value(muscle),
-        name = Value(name);
+        name = Value(name),
+        repeats_prop = Value(repeats_prop),
+        weight_prop = Value(weight_prop),
+        duration_prop = Value(duration_prop);
   static Insertable<ExerciseType> custom({
     Expression<String>? key,
     Expression<String>? type,
     Expression<String>? muscle,
     Expression<String>? name,
     Expression<String>? name_ru,
+    Expression<bool>? repeats_prop,
+    Expression<bool>? weight_prop,
+    Expression<bool>? duration_prop,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -142,6 +223,9 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
       if (muscle != null) 'muscle': muscle,
       if (name != null) 'name': name,
       if (name_ru != null) 'name_ru': name_ru,
+      if (repeats_prop != null) 'repeats_prop': repeats_prop,
+      if (weight_prop != null) 'weight_prop': weight_prop,
+      if (duration_prop != null) 'duration_prop': duration_prop,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -152,6 +236,9 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
       Value<MuscleGroup>? muscle,
       Value<String>? name,
       Value<String?>? name_ru,
+      Value<bool>? repeats_prop,
+      Value<bool>? weight_prop,
+      Value<bool>? duration_prop,
       Value<int>? rowid}) {
     return ExerciseTypesCompanion(
       key: key ?? this.key,
@@ -159,6 +246,9 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
       muscle: muscle ?? this.muscle,
       name: name ?? this.name,
       name_ru: name_ru ?? this.name_ru,
+      repeats_prop: repeats_prop ?? this.repeats_prop,
+      weight_prop: weight_prop ?? this.weight_prop,
+      duration_prop: duration_prop ?? this.duration_prop,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -183,6 +273,15 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
     if (name_ru.present) {
       map['name_ru'] = Variable<String>(name_ru.value);
     }
+    if (repeats_prop.present) {
+      map['repeats_prop'] = Variable<bool>(repeats_prop.value);
+    }
+    if (weight_prop.present) {
+      map['weight_prop'] = Variable<bool>(weight_prop.value);
+    }
+    if (duration_prop.present) {
+      map['duration_prop'] = Variable<bool>(duration_prop.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -197,6 +296,9 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
           ..write('muscle: $muscle, ')
           ..write('name: $name, ')
           ..write('name_ru: $name_ru, ')
+          ..write('repeats_prop: $repeats_prop, ')
+          ..write('weight_prop: $weight_prop, ')
+          ..write('duration_prop: $duration_prop, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -239,9 +341,9 @@ class $WorkoutsTable extends Workouts with TableInfo<$WorkoutsTable, Workout> {
   static const VerificationMeta _durationMeta =
       const VerificationMeta('duration');
   @override
-  late final GeneratedColumn<DateTime> duration = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<double> duration = GeneratedColumn<double>(
       'duration', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+      type: DriftSqlType.double, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
       [uuid, name, created, start, finish, duration];
@@ -301,7 +403,7 @@ class $WorkoutsTable extends Workouts with TableInfo<$WorkoutsTable, Workout> {
       finish: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}finish']),
       duration: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}duration']),
+          .read(DriftSqlType.double, data['${effectivePrefix}duration']),
     );
   }
 
@@ -317,7 +419,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
   final Value<DateTime> created;
   final Value<DateTime?> start;
   final Value<DateTime?> finish;
-  final Value<DateTime?> duration;
+  final Value<double?> duration;
   final Value<int> rowid;
   const WorkoutsCompanion({
     this.uuid = const Value.absent(),
@@ -343,7 +445,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
     Expression<DateTime>? created,
     Expression<DateTime>? start,
     Expression<DateTime>? finish,
-    Expression<DateTime>? duration,
+    Expression<double>? duration,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -363,7 +465,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
       Value<DateTime>? created,
       Value<DateTime?>? start,
       Value<DateTime?>? finish,
-      Value<DateTime?>? duration,
+      Value<double?>? duration,
       Value<int>? rowid}) {
     return WorkoutsCompanion(
       uuid: uuid ?? this.uuid,
@@ -395,7 +497,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
       map['finish'] = Variable<DateTime>(finish.value);
     }
     if (duration.present) {
-      map['duration'] = Variable<DateTime>(duration.value);
+      map['duration'] = Variable<double>(duration.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -474,9 +576,9 @@ class $ExercisesTable extends Exercises
   static const VerificationMeta _durationMeta =
       const VerificationMeta('duration');
   @override
-  late final GeneratedColumn<DateTime> duration = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<double> duration = GeneratedColumn<double>(
       'duration', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+      type: DriftSqlType.double, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
       [uuid, number, type, workout, created, start, finish, duration];
@@ -552,7 +654,7 @@ class $ExercisesTable extends Exercises
       finish: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}finish']),
       duration: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}duration']),
+          .read(DriftSqlType.double, data['${effectivePrefix}duration']),
     );
   }
 
@@ -570,7 +672,7 @@ class ExercisesCompanion extends UpdateCompanion<Exercise> {
   final Value<DateTime> created;
   final Value<DateTime?> start;
   final Value<DateTime?> finish;
-  final Value<DateTime?> duration;
+  final Value<double?> duration;
   final Value<int> rowid;
   const ExercisesCompanion({
     this.uuid = const Value.absent(),
@@ -604,7 +706,7 @@ class ExercisesCompanion extends UpdateCompanion<Exercise> {
     Expression<DateTime>? created,
     Expression<DateTime>? start,
     Expression<DateTime>? finish,
-    Expression<DateTime>? duration,
+    Expression<double>? duration,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -628,7 +730,7 @@ class ExercisesCompanion extends UpdateCompanion<Exercise> {
       Value<DateTime>? created,
       Value<DateTime?>? start,
       Value<DateTime?>? finish,
-      Value<DateTime?>? duration,
+      Value<double?>? duration,
       Value<int>? rowid}) {
     return ExercisesCompanion(
       uuid: uuid ?? this.uuid,
@@ -668,7 +770,7 @@ class ExercisesCompanion extends UpdateCompanion<Exercise> {
       map['finish'] = Variable<DateTime>(finish.value);
     }
     if (duration.present) {
-      map['duration'] = Variable<DateTime>(duration.value);
+      map['duration'] = Variable<double>(duration.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -752,9 +854,9 @@ class $ExerciseSetsTable extends ExerciseSets
   static const VerificationMeta _durationMeta =
       const VerificationMeta('duration');
   @override
-  late final GeneratedColumn<DateTime> duration = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<double> duration = GeneratedColumn<double>(
       'duration', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+      type: DriftSqlType.double, requiredDuringInsert: false);
   static const VerificationMeta _repeatsMeta =
       const VerificationMeta('repeats');
   @override
@@ -859,7 +961,7 @@ class $ExerciseSetsTable extends ExerciseSets
       finish: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}finish']),
       duration: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}duration']),
+          .read(DriftSqlType.double, data['${effectivePrefix}duration']),
       repeats: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}repeats']),
       weight: attachedDatabase.typeMapping
@@ -881,7 +983,7 @@ class ExerciseSetsCompanion extends UpdateCompanion<ExerciseSet> {
   final Value<DateTime> created;
   final Value<DateTime?> start;
   final Value<DateTime?> finish;
-  final Value<DateTime?> duration;
+  final Value<double?> duration;
   final Value<int?> repeats;
   final Value<double?> weight;
   final Value<int> rowid;
@@ -921,7 +1023,7 @@ class ExerciseSetsCompanion extends UpdateCompanion<ExerciseSet> {
     Expression<DateTime>? created,
     Expression<DateTime>? start,
     Expression<DateTime>? finish,
-    Expression<DateTime>? duration,
+    Expression<double>? duration,
     Expression<int>? repeats,
     Expression<double>? weight,
     Expression<int>? rowid,
@@ -949,7 +1051,7 @@ class ExerciseSetsCompanion extends UpdateCompanion<ExerciseSet> {
       Value<DateTime>? created,
       Value<DateTime?>? start,
       Value<DateTime?>? finish,
-      Value<DateTime?>? duration,
+      Value<double?>? duration,
       Value<int?>? repeats,
       Value<double?>? weight,
       Value<int>? rowid}) {
@@ -993,7 +1095,7 @@ class ExerciseSetsCompanion extends UpdateCompanion<ExerciseSet> {
       map['finish'] = Variable<DateTime>(finish.value);
     }
     if (duration.present) {
-      map['duration'] = Variable<DateTime>(duration.value);
+      map['duration'] = Variable<double>(duration.value);
     }
     if (repeats.present) {
       map['repeats'] = Variable<int>(repeats.value);
@@ -1038,4 +1140,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
       [exerciseTypes, workouts, exercises, exerciseSets];
+  @override
+  DriftDatabaseOptions get options =>
+      const DriftDatabaseOptions(storeDateTimeAsText: true);
 }

@@ -7,12 +7,15 @@ import 'package:workouts/app/app.dart';
 import 'package:workouts/app/database/database.dart';
 import 'package:workouts/app/database/models/exercise.dart';
 import 'package:workouts/app/database/models/exercise_set.dart';
+import 'package:workouts/app/database/models/exercise_type.dart';
 import 'package:workouts/app/router/app_router.dart';
 import 'package:workouts/app/runner.dart';
 import 'package:workouts/core/widgets/app_bar.dart';
+import 'package:workouts/core/widgets/menu_dialog.dart';
 import 'package:workouts/core/widgets/screen/screen.dart';
 import 'package:workouts/core/widgets/spacers.dart';
 import 'package:workouts/core/widgets/styled_text.dart';
+import 'package:workouts/extensions/duration_extension.dart';
 import 'package:workouts/extensions/iterable_extension.dart';
 import 'package:workouts/features/workouts/controllers/workout_controller.dart';
 import 'package:workouts/features/workouts/widgets/exercise_sheet.dart';
@@ -47,36 +50,21 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   void _showMenu(BuildContext context) {
     showDialog(
       context: context,
-      builder: (ctx) => GestureDetector(
-        onTap: () => appRouter.pop(),
-        child: Material(
-          type: MaterialType.transparency,
-          color: Colors.black.withOpacity(.1),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 224,
-              clipBehavior: Clip.hardEdge,
-              margin: const EdgeInsets.all(20),
-              width: double.maxFinite,
-              decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(30)),
-              child: Material(
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    ...List.generate(
-                      4,
-                      (index) => ListTile(
-                        onTap: () {},
-                        title: Center(child: StyledText('Button')),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+      builder: (ctx) => MenuDialog(
+        alignment: Alignment.topRight,
+        items: [
+          MenuDialogItem(label: 'Edit name', notAvailable: true, onTap: () {}),
+          MenuDialogItem(label: 'Edit exercises', notAvailable: true, onTap: () {}),
+          MenuDialogItem(label: 'Edit workout', notAvailable: true, onTap: () {}),
+          MenuDialogItem(label: 'Add exercises', icon: Icons.add, onTap: () {}),
+          MenuDialogItem(label: 'Save as template', notAvailable: true, icon: Icons.save_outlined, onTap: () {}),
+          MenuDialogItem(
+            label: 'Delete',
+            icon: Icons.delete,
+            onTap: () {},
+            color: Colors.red,
           ),
-        ),
+        ],
       ),
     );
   }
@@ -102,6 +90,13 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
         body: ReorderableListView(
           padding: EdgeInsets.only(top: 30, bottom: 50),
           onReorder: _state.updateExerciseNumber,
+          proxyDecorator: (child, _, __) {
+            return Material(
+              type: MaterialType.canvas,
+              color: Theme.of(context).colorScheme.surface,
+              child: child,
+            );
+          },
           children: [
             ..._state.exercises.mapWithIndex(
               (exercise, index) => _ExerciseItem(
@@ -225,7 +220,11 @@ class _ExerciseItemState extends State<_ExerciseItem> {
                         ),
                       ),
                     ),
-                    Expanded(child: _Sets(uuid: widget.exercise.uuid)),
+                    Expanded(
+                        child: _Sets(
+                      uuid: widget.exercise.uuid,
+                      type: widget.exercise.typeModel,
+                    )),
                   ],
                 ),
               ),
@@ -243,7 +242,11 @@ class _ExerciseItemState extends State<_ExerciseItem> {
 //
 class _Sets extends StatefulWidget {
   final String uuid;
-  const _Sets({required this.uuid});
+  final ExerciseType? type;
+  const _Sets({
+    required this.uuid,
+    required this.type,
+  });
 
   @override
   State<_Sets> createState() => _SetsState();
@@ -272,8 +275,44 @@ class _SetsState extends State<_Sets> {
 
   String setsToString() {
     Map<String, List<ExerciseSet>> mapStringSet = {};
+
+    if (widget.type == null) return '';
+
     sets.map((set) {
-      final string = '${(set.weight ?? 0).toStringAsFixed((set.weight ?? 0) % 1 == 0 ? 0 : 1)}x${set.repeats ?? 0}';
+      String string = '';
+      final weight = set.weight != null;
+      final duration = set.duration != null;
+      final reps = set.repeats != null;
+
+      // Only weight (100 kg)
+      if (weight && !duration && !reps) {
+        string = set.weight?.toStringAsFixed((set.weight ?? 0) % 1 == 0 ? 0 : 1) ?? '0';
+      }
+
+      // Only duration (01:00)
+      if (duration && !weight && !reps) {
+        string = Duration(seconds: set.duration?.floor() ?? 0).toStringTime();
+      }
+
+      // Only repeats (5)
+      if (reps && !duration && !weight) {
+        string = (set.repeats ?? 0).toString();
+      }
+
+      // Weight and duration (40 kg x 1:00)
+      if (weight && duration) {
+        string = '${set.weight?.toStringAsFixed((set.weight ?? 0) % 1 == 0 ? 0 : 1) ?? '0'} x ${Duration(seconds: set.duration?.floor() ?? 0).toStringTime()}';
+      }
+
+      // Weight and reps (100 kg x 5 x sets)
+      if (weight && reps) {
+        string = '${(set.weight ?? 0).toStringAsFixed((set.weight ?? 0) % 1 == 0 ? 0 : 1)}x${set.repeats ?? 0}';
+      }
+      // Duration and reps (00:30 x 3 x sets)
+      if (duration && reps) {
+        string = '${Duration(seconds: set.duration?.floor() ?? 0).toStringTime()} x ${(set.repeats ?? 0).toString()}';
+      }
+
       if (mapStringSet.containsKey(string)) {
         mapStringSet[string]!.add(set);
       } else {
@@ -282,6 +321,7 @@ class _SetsState extends State<_Sets> {
         });
       }
     }).toList();
+
     String result = '';
     mapStringSet.map((key, value) {
       result += (result.length > 1 ? ', ' : '') + (value.length > 1 ? '${key}x${value.length}' : key);
@@ -319,10 +359,6 @@ class _BottomBar extends StatelessWidget {
       height: 60,
       child: Row(
         children: [
-          HorizontalSpacer.w10(),
-          IconButton.filledTonal(onPressed: onDelete, icon: const Icon(Icons.delete)),
-          const Spacer(),
-          IconButton.filledTonal(onPressed: () {}, icon: const Icon(Icons.edit)),
           const Spacer(),
           IconButton.filledTonal(onPressed: onAdd, icon: const Icon(Icons.add)),
           HorizontalSpacer.w10(),

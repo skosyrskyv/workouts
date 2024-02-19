@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dart_date/dart_date.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -29,9 +30,7 @@ class AppDatabase extends _$AppDatabase {
   Stream<List<Workout>> watchWorkouts({required DateTime date}) {
     return (select(workouts)
           ..where((workout) {
-            return workout.created.month.equals(date.toUtc().month) &
-                workout.created.year.equals(date.toUtc().year) &
-                workout.created.day.equals(date.toUtc().day);
+            return workout.created.month.equals(date.toUTC.month) & workout.created.year.equals(date.toUTC.year) & workout.created.day.equals(date.toUTC.day);
           }))
         .watch();
   }
@@ -110,6 +109,14 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
+  Future updateSetDuration({required String uuid, required int duration}) async {
+    return (update(exerciseSets)..where((set) => set.uuid.equals(uuid))).write(
+      ExerciseSetsCompanion(
+        duration: Value(duration.toDouble()),
+      ),
+    );
+  }
+
   Future<Workout?> getWorkout({required String uuid}) async {
     return (select(workouts)..where((workout) => workout.uuid.equals(uuid))).getSingleOrNull();
   }
@@ -150,10 +157,13 @@ class AppDatabase extends _$AppDatabase {
     await batch((batch) {
       final sets = newExercises
           .map(
-            (e) => ExerciseSet.create(
+            (exercise) => ExerciseSet.create(
               number: 1,
-              exercise: e.uuid,
-              workout: e.workout,
+              exercise: exercise.uuid,
+              workout: exercise.workout,
+              duration: exercise.typeModel!.duration_prop ? 0 : null,
+              weight: exercise.typeModel!.weight_prop ? 0 : null,
+              repeats: exercise.typeModel!.repeats_prop ? 0 : null,
             ),
           )
           .toList();
