@@ -78,6 +78,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     return ListenableBuilder(
       listenable: _state,
       builder: (context, child) => Screen(
+        resizeToAvoidBottomInset: false,
         appBar: CustomAppBar(
           title: 'Workout',
           subtitle: DateFormat('EEEE, d MMMM').format(
@@ -87,12 +88,12 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
             onPressed: () {
               _showMenu(context);
             },
-            icon: Icon(Icons.more_horiz),
+            icon: const Icon(Icons.more_horiz),
           ),
           centerTitle: true,
         ),
         body: _state.exercises.isEmpty
-            ? _Empty()
+            ? const _Empty()
             : ReorderableListView(
                 padding: const EdgeInsets.only(top: 30, bottom: 50),
                 onReorder: _state.updateExerciseNumber,

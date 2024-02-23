@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:workouts/app/database/enums.dart';
 import 'package:workouts/app/database/models/exercise_type.dart';
 import 'package:workouts/app/runner.dart';
@@ -82,30 +83,32 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         appBar: const CustomAppBar(
           title: 'Exercises',
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            VerticalSpacer.h10(),
-            _SearchBar(
-              autofocus: _state.exercises.isEmpty,
-              onSearch: _state.search,
-            ),
-            Expanded(
-              child: _state.error != null
-                  ? _Error(
-                      error: _state.error,
-                      onReload: () {},
-                    )
-                  : _state.exercises.isEmpty
-                      ? const _Empty()
-                      : ListView.separated(
-                          itemCount: _state.exercises.length + 1,
-                          padding: const EdgeInsets.only(top: 30, bottom: 60),
-                          itemBuilder: _itemBuilder,
-                          separatorBuilder: _separatorBuilder,
-                        ),
-            ),
-          ],
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              VerticalSpacer.h10(),
+              _SearchBar(
+                autofocus: _state.exercises.isEmpty,
+                onSearch: _state.search,
+              ),
+              Expanded(
+                child: _state.error != null
+                    ? _Error(
+                        error: _state.error,
+                        onReload: () {},
+                      )
+                    : _state.exercises.isEmpty
+                        ? const _Empty()
+                        : ListView.separated(
+                            itemCount: _state.exercises.length + 1,
+                            padding: const EdgeInsets.only(top: 30, bottom: 60),
+                            itemBuilder: _itemBuilder,
+                            separatorBuilder: _separatorBuilder,
+                          ),
+              ),
+            ],
+          ),
         ),
         bottomNavigationBar: _state.selected.isNotEmpty
             ? SafeArea(
@@ -244,12 +247,12 @@ class _SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<_SearchBar> {
-  final FocusScopeNode _focusScopeNode = FocusScopeNode();
-  final _controller = TextEditingController();
+  late final TextEditingController _controller;
+  late final KeyboardVisibilityController _keyboardController;
   bool _isFocused = false;
 
-  void _focusListener() {
-    _setFocus(_focusScopeNode.hasPrimaryFocus);
+  void _keyboardListener(bool isOpened) {
+    _setFocus(isOpened);
   }
 
   void _setFocus(bool value) {
@@ -261,13 +264,16 @@ class _SearchBarState extends State<_SearchBar> {
 
   @override
   void initState() {
-    _focusScopeNode.addListener(_focusListener);
+    _controller = TextEditingController();
+    _keyboardController = KeyboardVisibilityController();
+    _keyboardController.onChange.listen(_keyboardListener);
+
     super.initState();
   }
 
   @override
   void dispose() {
-    _focusScopeNode.removeListener(_focusListener);
+    _controller.dispose();
     super.dispose();
   }
 
@@ -281,29 +287,31 @@ class _SearchBarState extends State<_SearchBar> {
           curve: Curves.ease,
           child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 5),
-            child: TextField(
-              controller: _controller,
-              focusNode: _focusScopeNode,
-              keyboardType: TextInputType.text,
-              onChanged: widget.onSearch,
-              autofocus: true,
-              decoration: InputDecoration(
-                isCollapsed: true,
-                contentPadding: const EdgeInsets.only(left: 20, right: 10, top: 10, bottom: 10),
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.primary.withOpacity(.1),
-                hintText: 'Search',
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(.5),
-                ),
-                hintStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(.3),
-                  fontWeight: FontWeight.normal,
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(30),
+            child: KeyboardVisibilityProvider(
+              controller: _keyboardController,
+              child: TextField(
+                controller: _controller,
+                keyboardType: TextInputType.text,
+                onChanged: widget.onSearch,
+                autofocus: true,
+                decoration: InputDecoration(
+                  isCollapsed: true,
+                  contentPadding: const EdgeInsets.only(left: 20, right: 10, top: 10, bottom: 10),
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.primary.withOpacity(.1),
+                  hintText: 'Search',
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(.5),
+                  ),
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(.3),
+                    fontWeight: FontWeight.normal,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
               ),
             ),
@@ -317,11 +325,11 @@ class _SearchBarState extends State<_SearchBar> {
           height: _isFocused ? 40 : 0,
           child: TextButton(
             onPressed: () {
-              _focusScopeNode.unfocus();
+              FocusManager.instance.primaryFocus?.unfocus();
               widget.onSearch('');
               _controller.clear();
             },
-            child: Text('cancel'),
+            child: const Text('cancel'),
           ),
         ),
       ],

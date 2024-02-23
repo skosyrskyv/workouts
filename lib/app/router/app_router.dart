@@ -16,16 +16,14 @@ class AppRouter extends _$AppRouter {
   @override
   final List<AutoRoute> routes = [
     AutoRoute(
-      initial: true,
       path: '/',
       page: WorkoutsRoute.page,
     ),
     AutoRoute(
-      keepHistory: false,
+      path: '/workout/exercises-types',
       page: ExercisesRoute.page,
     ),
     AutoRoute(
-      keepHistory: true,
       path: '/workout',
       page: WorkoutRoute.page,
     ),

@@ -60,7 +60,7 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
   Widget build(BuildContext context) {
     final screenHight = MediaQuery.of(context).size.height;
     final minOffset = MediaQuery.of(context).padding.top + 50 + 12;
-    final maxOffset = screenHight - MediaQuery.of(context).padding.bottom - 100;
+    final maxOffset = screenHight - 100;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
