@@ -27,6 +27,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BlankPage(),
       );
     },
+    ExerciseCreatingRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ExerciseCreatingScreen(),
+      );
+    },
     ExercisesRoute.name: (routeData) {
       final args = routeData.argsAs<ExercisesRouteArgs>(
           orElse: () => const ExercisesRouteArgs());
@@ -83,6 +89,20 @@ class BlankRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BlankRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ExerciseCreatingScreen]
+class ExerciseCreatingRoute extends PageRouteInfo<void> {
+  const ExerciseCreatingRoute({List<PageRouteInfo>? children})
+      : super(
+          ExerciseCreatingRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ExerciseCreatingRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

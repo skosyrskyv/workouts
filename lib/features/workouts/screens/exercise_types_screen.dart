@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:workouts/app/app.dart';
 import 'package:workouts/app/database/enums.dart';
 import 'package:workouts/app/database/models/exercise_type.dart';
+import 'package:workouts/app/router/app_router.dart';
 import 'package:workouts/app/runner.dart';
 import 'package:workouts/core/widgets/app_bar.dart';
 import 'package:workouts/core/widgets/screen/screen.dart';
@@ -39,7 +41,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         children: [
           _TypeSeparator(type: _state.exercises[index].type),
           _MuscleGroupSeparator(
-            muscle: _state.exercises[index].muscle,
+            muscleGroup: _state.exercises[index].muscleGroup,
           ),
         ],
       );
@@ -50,15 +52,15 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
           VerticalSpacer.h20(),
           _TypeSeparator(type: _state.exercises[index].type),
           _MuscleGroupSeparator(
-            muscle: _state.exercises[index].muscle,
+            muscleGroup: _state.exercises[index].muscleGroup,
           ),
         ],
       );
     }
 
-    if (_state.exercises[index - 1].muscle != _state.exercises[index].muscle) {
+    if (_state.exercises[index - 1].muscleGroup != _state.exercises[index].muscleGroup) {
       return _MuscleGroupSeparator(
-        muscle: _state.exercises[index].muscle,
+        muscleGroup: _state.exercises[index].muscleGroup,
       );
     }
     return const SizedBox();
@@ -80,8 +82,12 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       listenable: _state,
       builder: (context, _) => Screen(
         resizeToAvoidBottomInset: false,
-        appBar: const CustomAppBar(
+        appBar: CustomAppBar(
           title: 'Exercises',
+          actionButton: IconButton(
+            onPressed: () => appRouter.push(const ExerciseCreatingRoute()),
+            icon: const Icon(Icons.add),
+          ),
         ),
         body: SafeArea(
           child: Column(
@@ -174,8 +180,8 @@ class _TypeSeparator extends StatelessWidget {
 //  Muscle group separator
 //
 class _MuscleGroupSeparator extends StatelessWidget {
-  final MuscleGroup muscle;
-  const _MuscleGroupSeparator({super.key, required this.muscle});
+  final MuscleGroup muscleGroup;
+  const _MuscleGroupSeparator({super.key, required this.muscleGroup});
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +191,7 @@ class _MuscleGroupSeparator extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           StyledText(
-            muscle.name,
+            muscleGroup.name,
             style: TypographyStyle.titleMedium,
             bold: true,
             color: Theme.of(context).colorScheme.secondary,

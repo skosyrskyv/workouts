@@ -13,16 +13,17 @@ const _uuid = Uuid();
 //
 //  EXERCISE TYPE
 //
-@UseRowClass(ExerciseType)
+@UseRowClass(ExerciseType, constructor: 'fromDB')
 class ExerciseTypes extends Table {
   TextColumn get key => text()();
   TextColumn get type => textEnum<ExerciseGroup>()();
-  TextColumn get muscle => textEnum<MuscleGroup>()();
+  TextColumn get muscleGroup => textEnum<MuscleGroup>()();
+  TextColumn get muscles => text().nullable()();
   TextColumn get name => text()();
-  TextColumn get name_ru => text().nullable()();
-  BoolColumn get repeats_prop => boolean()();
-  BoolColumn get weight_prop => boolean()();
-  BoolColumn get duration_prop => boolean()();
+  TextColumn get nameRu => text().nullable()();
+  BoolColumn get repeatsProp => boolean()();
+  BoolColumn get weightProp => boolean()();
+  BoolColumn get durationProp => boolean()();
 
   @override
   Set<Column> get primaryKey => {key};

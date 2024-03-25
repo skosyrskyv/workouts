@@ -20,45 +20,52 @@ class $ExerciseTypesTable extends ExerciseTypes
       GeneratedColumn<String>('type', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<ExerciseGroup>($ExerciseTypesTable.$convertertype);
-  static const VerificationMeta _muscleMeta = const VerificationMeta('muscle');
+  static const VerificationMeta _muscleGroupMeta =
+      const VerificationMeta('muscleGroup');
   @override
-  late final GeneratedColumnWithTypeConverter<MuscleGroup, String> muscle =
-      GeneratedColumn<String>('muscle', aliasedName, false,
+  late final GeneratedColumnWithTypeConverter<MuscleGroup, String> muscleGroup =
+      GeneratedColumn<String>('muscle_group', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<MuscleGroup>($ExerciseTypesTable.$convertermuscle);
+          .withConverter<MuscleGroup>(
+              $ExerciseTypesTable.$convertermuscleGroup);
+  static const VerificationMeta _musclesMeta =
+      const VerificationMeta('muscles');
+  @override
+  late final GeneratedColumn<String> muscles = GeneratedColumn<String>(
+      'muscles', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _name_ruMeta =
-      const VerificationMeta('name_ru');
+  static const VerificationMeta _nameRuMeta = const VerificationMeta('nameRu');
   @override
-  late final GeneratedColumn<String> name_ru = GeneratedColumn<String>(
+  late final GeneratedColumn<String> nameRu = GeneratedColumn<String>(
       'name_ru', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _repeats_propMeta =
-      const VerificationMeta('repeats_prop');
+  static const VerificationMeta _repeatsPropMeta =
+      const VerificationMeta('repeatsProp');
   @override
-  late final GeneratedColumn<bool> repeats_prop = GeneratedColumn<bool>(
+  late final GeneratedColumn<bool> repeatsProp = GeneratedColumn<bool>(
       'repeats_prop', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
       defaultConstraints: GeneratedColumn.constraintIsAlways(
           'CHECK ("repeats_prop" IN (0, 1))'));
-  static const VerificationMeta _weight_propMeta =
-      const VerificationMeta('weight_prop');
+  static const VerificationMeta _weightPropMeta =
+      const VerificationMeta('weightProp');
   @override
-  late final GeneratedColumn<bool> weight_prop = GeneratedColumn<bool>(
+  late final GeneratedColumn<bool> weightProp = GeneratedColumn<bool>(
       'weight_prop', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
       defaultConstraints: GeneratedColumn.constraintIsAlways(
           'CHECK ("weight_prop" IN (0, 1))'));
-  static const VerificationMeta _duration_propMeta =
-      const VerificationMeta('duration_prop');
+  static const VerificationMeta _durationPropMeta =
+      const VerificationMeta('durationProp');
   @override
-  late final GeneratedColumn<bool> duration_prop = GeneratedColumn<bool>(
+  late final GeneratedColumn<bool> durationProp = GeneratedColumn<bool>(
       'duration_prop', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
@@ -68,12 +75,13 @@ class $ExerciseTypesTable extends ExerciseTypes
   List<GeneratedColumn> get $columns => [
         key,
         type,
-        muscle,
+        muscleGroup,
+        muscles,
         name,
-        name_ru,
-        repeats_prop,
-        weight_prop,
-        duration_prop
+        nameRu,
+        repeatsProp,
+        weightProp,
+        durationProp
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -92,7 +100,11 @@ class $ExerciseTypesTable extends ExerciseTypes
       context.missing(_keyMeta);
     }
     context.handle(_typeMeta, const VerificationResult.success());
-    context.handle(_muscleMeta, const VerificationResult.success());
+    context.handle(_muscleGroupMeta, const VerificationResult.success());
+    if (data.containsKey('muscles')) {
+      context.handle(_musclesMeta,
+          muscles.isAcceptableOrUnknown(data['muscles']!, _musclesMeta));
+    }
     if (data.containsKey('name')) {
       context.handle(
           _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
@@ -100,32 +112,32 @@ class $ExerciseTypesTable extends ExerciseTypes
       context.missing(_nameMeta);
     }
     if (data.containsKey('name_ru')) {
-      context.handle(_name_ruMeta,
-          name_ru.isAcceptableOrUnknown(data['name_ru']!, _name_ruMeta));
+      context.handle(_nameRuMeta,
+          nameRu.isAcceptableOrUnknown(data['name_ru']!, _nameRuMeta));
     }
     if (data.containsKey('repeats_prop')) {
       context.handle(
-          _repeats_propMeta,
-          repeats_prop.isAcceptableOrUnknown(
-              data['repeats_prop']!, _repeats_propMeta));
+          _repeatsPropMeta,
+          repeatsProp.isAcceptableOrUnknown(
+              data['repeats_prop']!, _repeatsPropMeta));
     } else if (isInserting) {
-      context.missing(_repeats_propMeta);
+      context.missing(_repeatsPropMeta);
     }
     if (data.containsKey('weight_prop')) {
       context.handle(
-          _weight_propMeta,
-          weight_prop.isAcceptableOrUnknown(
-              data['weight_prop']!, _weight_propMeta));
+          _weightPropMeta,
+          weightProp.isAcceptableOrUnknown(
+              data['weight_prop']!, _weightPropMeta));
     } else if (isInserting) {
-      context.missing(_weight_propMeta);
+      context.missing(_weightPropMeta);
     }
     if (data.containsKey('duration_prop')) {
       context.handle(
-          _duration_propMeta,
-          duration_prop.isAcceptableOrUnknown(
-              data['duration_prop']!, _duration_propMeta));
+          _durationPropMeta,
+          durationProp.isAcceptableOrUnknown(
+              data['duration_prop']!, _durationPropMeta));
     } else if (isInserting) {
-      context.missing(_duration_propMeta);
+      context.missing(_durationPropMeta);
     }
     return context;
   }
@@ -135,24 +147,26 @@ class $ExerciseTypesTable extends ExerciseTypes
   @override
   ExerciseType map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ExerciseType(
+    return ExerciseType.fromDB(
       key: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}key'])!,
       type: $ExerciseTypesTable.$convertertype.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}type'])!),
-      muscle: $ExerciseTypesTable.$convertermuscle.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}muscle'])!),
+      muscleGroup: $ExerciseTypesTable.$convertermuscleGroup.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}muscle_group'])!),
+      muscles: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}muscles']),
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      name_ru: attachedDatabase.typeMapping
+      nameRu: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name_ru']),
-      repeats_prop: attachedDatabase.typeMapping
+      repeatsProp: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}repeats_prop'])!,
-      weight_prop: attachedDatabase.typeMapping
+      weightProp: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}weight_prop'])!,
-      duration_prop: attachedDatabase.typeMapping
+      durationProp: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}duration_prop'])!,
     );
   }
@@ -164,68 +178,73 @@ class $ExerciseTypesTable extends ExerciseTypes
 
   static JsonTypeConverter2<ExerciseGroup, String, String> $convertertype =
       const EnumNameConverter<ExerciseGroup>(ExerciseGroup.values);
-  static JsonTypeConverter2<MuscleGroup, String, String> $convertermuscle =
+  static JsonTypeConverter2<MuscleGroup, String, String> $convertermuscleGroup =
       const EnumNameConverter<MuscleGroup>(MuscleGroup.values);
 }
 
 class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
   final Value<String> key;
   final Value<ExerciseGroup> type;
-  final Value<MuscleGroup> muscle;
+  final Value<MuscleGroup> muscleGroup;
+  final Value<String?> muscles;
   final Value<String> name;
-  final Value<String?> name_ru;
-  final Value<bool> repeats_prop;
-  final Value<bool> weight_prop;
-  final Value<bool> duration_prop;
+  final Value<String?> nameRu;
+  final Value<bool> repeatsProp;
+  final Value<bool> weightProp;
+  final Value<bool> durationProp;
   final Value<int> rowid;
   const ExerciseTypesCompanion({
     this.key = const Value.absent(),
     this.type = const Value.absent(),
-    this.muscle = const Value.absent(),
+    this.muscleGroup = const Value.absent(),
+    this.muscles = const Value.absent(),
     this.name = const Value.absent(),
-    this.name_ru = const Value.absent(),
-    this.repeats_prop = const Value.absent(),
-    this.weight_prop = const Value.absent(),
-    this.duration_prop = const Value.absent(),
+    this.nameRu = const Value.absent(),
+    this.repeatsProp = const Value.absent(),
+    this.weightProp = const Value.absent(),
+    this.durationProp = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ExerciseTypesCompanion.insert({
     required String key,
     required ExerciseGroup type,
-    required MuscleGroup muscle,
+    required MuscleGroup muscleGroup,
+    this.muscles = const Value.absent(),
     required String name,
-    this.name_ru = const Value.absent(),
-    required bool repeats_prop,
-    required bool weight_prop,
-    required bool duration_prop,
+    this.nameRu = const Value.absent(),
+    required bool repeatsProp,
+    required bool weightProp,
+    required bool durationProp,
     this.rowid = const Value.absent(),
   })  : key = Value(key),
         type = Value(type),
-        muscle = Value(muscle),
+        muscleGroup = Value(muscleGroup),
         name = Value(name),
-        repeats_prop = Value(repeats_prop),
-        weight_prop = Value(weight_prop),
-        duration_prop = Value(duration_prop);
+        repeatsProp = Value(repeatsProp),
+        weightProp = Value(weightProp),
+        durationProp = Value(durationProp);
   static Insertable<ExerciseType> custom({
     Expression<String>? key,
     Expression<String>? type,
-    Expression<String>? muscle,
+    Expression<String>? muscleGroup,
+    Expression<String>? muscles,
     Expression<String>? name,
-    Expression<String>? name_ru,
-    Expression<bool>? repeats_prop,
-    Expression<bool>? weight_prop,
-    Expression<bool>? duration_prop,
+    Expression<String>? nameRu,
+    Expression<bool>? repeatsProp,
+    Expression<bool>? weightProp,
+    Expression<bool>? durationProp,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (key != null) 'key': key,
       if (type != null) 'type': type,
-      if (muscle != null) 'muscle': muscle,
+      if (muscleGroup != null) 'muscle_group': muscleGroup,
+      if (muscles != null) 'muscles': muscles,
       if (name != null) 'name': name,
-      if (name_ru != null) 'name_ru': name_ru,
-      if (repeats_prop != null) 'repeats_prop': repeats_prop,
-      if (weight_prop != null) 'weight_prop': weight_prop,
-      if (duration_prop != null) 'duration_prop': duration_prop,
+      if (nameRu != null) 'name_ru': nameRu,
+      if (repeatsProp != null) 'repeats_prop': repeatsProp,
+      if (weightProp != null) 'weight_prop': weightProp,
+      if (durationProp != null) 'duration_prop': durationProp,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -233,22 +252,24 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
   ExerciseTypesCompanion copyWith(
       {Value<String>? key,
       Value<ExerciseGroup>? type,
-      Value<MuscleGroup>? muscle,
+      Value<MuscleGroup>? muscleGroup,
+      Value<String?>? muscles,
       Value<String>? name,
-      Value<String?>? name_ru,
-      Value<bool>? repeats_prop,
-      Value<bool>? weight_prop,
-      Value<bool>? duration_prop,
+      Value<String?>? nameRu,
+      Value<bool>? repeatsProp,
+      Value<bool>? weightProp,
+      Value<bool>? durationProp,
       Value<int>? rowid}) {
     return ExerciseTypesCompanion(
       key: key ?? this.key,
       type: type ?? this.type,
-      muscle: muscle ?? this.muscle,
+      muscleGroup: muscleGroup ?? this.muscleGroup,
+      muscles: muscles ?? this.muscles,
       name: name ?? this.name,
-      name_ru: name_ru ?? this.name_ru,
-      repeats_prop: repeats_prop ?? this.repeats_prop,
-      weight_prop: weight_prop ?? this.weight_prop,
-      duration_prop: duration_prop ?? this.duration_prop,
+      nameRu: nameRu ?? this.nameRu,
+      repeatsProp: repeatsProp ?? this.repeatsProp,
+      weightProp: weightProp ?? this.weightProp,
+      durationProp: durationProp ?? this.durationProp,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -263,24 +284,27 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
       map['type'] = Variable<String>(
           $ExerciseTypesTable.$convertertype.toSql(type.value));
     }
-    if (muscle.present) {
-      map['muscle'] = Variable<String>(
-          $ExerciseTypesTable.$convertermuscle.toSql(muscle.value));
+    if (muscleGroup.present) {
+      map['muscle_group'] = Variable<String>(
+          $ExerciseTypesTable.$convertermuscleGroup.toSql(muscleGroup.value));
+    }
+    if (muscles.present) {
+      map['muscles'] = Variable<String>(muscles.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (name_ru.present) {
-      map['name_ru'] = Variable<String>(name_ru.value);
+    if (nameRu.present) {
+      map['name_ru'] = Variable<String>(nameRu.value);
     }
-    if (repeats_prop.present) {
-      map['repeats_prop'] = Variable<bool>(repeats_prop.value);
+    if (repeatsProp.present) {
+      map['repeats_prop'] = Variable<bool>(repeatsProp.value);
     }
-    if (weight_prop.present) {
-      map['weight_prop'] = Variable<bool>(weight_prop.value);
+    if (weightProp.present) {
+      map['weight_prop'] = Variable<bool>(weightProp.value);
     }
-    if (duration_prop.present) {
-      map['duration_prop'] = Variable<bool>(duration_prop.value);
+    if (durationProp.present) {
+      map['duration_prop'] = Variable<bool>(durationProp.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -293,12 +317,13 @@ class ExerciseTypesCompanion extends UpdateCompanion<ExerciseType> {
     return (StringBuffer('ExerciseTypesCompanion(')
           ..write('key: $key, ')
           ..write('type: $type, ')
-          ..write('muscle: $muscle, ')
+          ..write('muscleGroup: $muscleGroup, ')
+          ..write('muscles: $muscles, ')
           ..write('name: $name, ')
-          ..write('name_ru: $name_ru, ')
-          ..write('repeats_prop: $repeats_prop, ')
-          ..write('weight_prop: $weight_prop, ')
-          ..write('duration_prop: $duration_prop, ')
+          ..write('nameRu: $nameRu, ')
+          ..write('repeatsProp: $repeatsProp, ')
+          ..write('weightProp: $weightProp, ')
+          ..write('durationProp: $durationProp, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();

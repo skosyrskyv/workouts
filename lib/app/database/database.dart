@@ -161,9 +161,9 @@ class AppDatabase extends _$AppDatabase {
               number: 1,
               exercise: exercise.uuid,
               workout: exercise.workout,
-              duration: exercise.typeModel!.duration_prop ? 0 : null,
-              weight: exercise.typeModel!.weight_prop ? 0 : null,
-              repeats: exercise.typeModel!.repeats_prop ? 0 : null,
+              duration: exercise.typeModel!.durationProp ? 0 : null,
+              weight: exercise.typeModel!.weightProp ? 0 : null,
+              repeats: exercise.typeModel!.repeatsProp ? 0 : null,
             ),
           )
           .toList();
@@ -174,7 +174,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<ExerciseType>> getAllExerciseTypes() {
-    return (select(exerciseTypes)..orderBy([(t) => OrderingTerm(expression: t.type, mode: OrderingMode.desc), (t) => OrderingTerm(expression: t.muscle)]))
+    return (select(exerciseTypes)..orderBy([(t) => OrderingTerm(expression: t.type, mode: OrderingMode.desc), (t) => OrderingTerm(expression: t.muscleGroup)]))
         .get();
   }
 
@@ -187,8 +187,8 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<ExerciseType>> searchExerciseTypes({required String pattern}) {
     return (select(exerciseTypes)
-          ..where((item) => Expression.or([item.name.like("%$pattern%"), item.name_ru.like("%$pattern%")]))
-          ..orderBy([(t) => OrderingTerm(expression: t.type, mode: OrderingMode.desc), (t) => OrderingTerm(expression: t.muscle)]))
+          ..where((item) => Expression.or([item.name.like("%$pattern%"), item.nameRu.like("%$pattern%")]))
+          ..orderBy([(t) => OrderingTerm(expression: t.type, mode: OrderingMode.desc), (t) => OrderingTerm(expression: t.muscleGroup)]))
         .get();
   }
 

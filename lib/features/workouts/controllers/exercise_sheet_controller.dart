@@ -103,9 +103,9 @@ class ExerciseSheetController extends ChangeNotifier {
           number: sets.last.number + 1,
           exercise: current.uuid,
           workout: current.workout,
-          weight: current.typeModel?.weight_prop == true ? 0 : null,
-          duration: current.typeModel?.duration_prop == true ? 0 : null,
-          repeats: current.typeModel?.repeats_prop == true ? 0 : null,
+          weight: current.typeModel?.weightProp == true ? 0 : null,
+          duration: current.typeModel?.durationProp == true ? 0 : null,
+          repeats: current.typeModel?.repeatsProp == true ? 0 : null,
         ),
       );
     } catch (e) {

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:workouts/app/database/models/exercise_type.dart';
 import 'package:workouts/app/router/blank_page.dart';
 import 'package:workouts/features/auth/screen/auth_screen.dart';
+import 'package:workouts/features/exercises/screen/exercise_creating_screen.dart';
 import 'package:workouts/features/workouts/screens/exercise_types_screen.dart';
 import 'package:workouts/features/workouts/screens/workout_screen.dart';
 import 'package:workouts/features/workouts/screens/workouts_screen.dart';
@@ -22,6 +23,10 @@ class AppRouter extends _$AppRouter {
     AutoRoute(
       path: '/workout/exercises-types',
       page: ExercisesRoute.page,
+    ),
+    AutoRoute(
+      path: '/workout/exercise-create',
+      page: ExerciseCreatingRoute.page,
     ),
     AutoRoute(
       path: '/workout',

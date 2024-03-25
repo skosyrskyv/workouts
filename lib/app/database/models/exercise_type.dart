@@ -7,35 +7,49 @@ import 'package:workouts/app/database/enums.dart';
 class ExerciseType implements Insertable<ExerciseType> {
   final String key;
   final ExerciseGroup type;
-  final MuscleGroup muscle;
+  final MuscleGroup muscleGroup;
+  final List<String>? muscles;
   final String name;
-  final String? name_ru;
-  final bool repeats_prop;
-  final bool weight_prop;
-  final bool duration_prop;
+  final String? nameRu;
+  final bool repeatsProp;
+  final bool weightProp;
+  final bool durationProp;
 
   ExerciseType({
     required this.key,
     required this.type,
-    required this.muscle,
+    required this.muscleGroup,
+    required this.muscles,
     required this.name,
-    required this.name_ru,
-    required this.repeats_prop,
-    required this.weight_prop,
-    required this.duration_prop,
+    required this.nameRu,
+    required this.repeatsProp,
+    required this.weightProp,
+    required this.durationProp,
   });
+
+  ExerciseType.fromDB({
+    required this.key,
+    required this.type,
+    required this.muscleGroup,
+    String? muscles,
+    required this.name,
+    required this.nameRu,
+    required this.repeatsProp,
+    required this.weightProp,
+    required this.durationProp,
+  }) : muscles = muscles?.split(',');
 
   @override
   Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
     return ExerciseTypesCompanion(
       key: Value(key),
       type: Value(type),
-      muscle: Value(muscle),
+      muscleGroup: Value(muscleGroup),
       name: Value(name),
-      name_ru: Value(name_ru),
-      repeats_prop: Value(repeats_prop),
-      weight_prop: Value(weight_prop),
-      duration_prop: Value(duration_prop),
+      nameRu: Value(nameRu),
+      repeatsProp: Value(repeatsProp),
+      weightProp: Value(weightProp),
+      durationProp: Value(durationProp),
     ).toColumns(nullToAbsent);
   }
 

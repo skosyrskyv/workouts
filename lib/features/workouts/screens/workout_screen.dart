@@ -37,6 +37,7 @@ class WorkoutScreen extends StatefulWidget {
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
   late final WorkoutController _state;
+
   @override
   void initState() {
     _state = WorkoutController(
@@ -45,6 +46,12 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       database: getIt.get(),
     );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _state.dispose();
+    super.dispose();
   }
 
   void _showMenu(BuildContext context) {

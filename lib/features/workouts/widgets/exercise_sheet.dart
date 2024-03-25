@@ -71,7 +71,7 @@ class _ExerciseSheetState extends State<ExerciseSheet> {
                   ),
                   VerticalSpacer.h4(),
                   StyledText(
-                    _state.current.typeModel?.muscle.name.toUpperCase(),
+                    _state.current.typeModel?.muscleGroup.name.toUpperCase(),
                     style: TypographyStyle.titleSmall,
                     highlighted: true,
                     bold: true,
